@@ -9,8 +9,21 @@
 
 import 'package:flutter/widgets.dart';
 
+class $AssetsIconsGen {
+  const $AssetsIconsGen();
+
+  /// File path: assets/icons/mpin_success.png
+  AssetGenImage get mpinSuccess =>
+      const AssetGenImage('assets/icons/mpin_success.png');
+
+  /// List of all assets
+  List<AssetGenImage> get values => [mpinSuccess];
+}
+
 class Assets {
   Assets._();
+
+  static const $AssetsIconsGen icons = $AssetsIconsGen();
 }
 
 class AssetGenImage {
