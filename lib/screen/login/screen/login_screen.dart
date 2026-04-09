@@ -1,7 +1,5 @@
 import 'package:chat_ui/routes/route_names.dart';
 import 'package:chat_ui/screen/login/cubit/login_screen_cubit.dart';
-import 'package:chat_ui/screen/login/cubit/signup_screen_cubit.dart';
-import 'package:chat_ui/screen/login/screen/signup_screen.dart';
 import 'package:chat_ui/screen/widget/common_button.dart';
 import 'package:chat_ui/screen/widget/common_textfield.dart';
 import 'package:flutter/material.dart';
@@ -25,6 +23,8 @@ class LoginScreen extends StatelessWidget {
             ScaffoldMessenger.of(
               context,
             ).showSnackBar(const SnackBar(content: Text("Login Successful")));
+
+            GoRouter.of(context).go(RouteNames.home);
           }
 
           if (state is AuthError) {
@@ -103,7 +103,7 @@ class LoginScreen extends StatelessWidget {
                     const SizedBox(height: 10),
                     TextButton(
                       onPressed: () {
-                        GoRouter.of(context).push(RouteNames.signup);
+                        GoRouter.of(context).go(RouteNames.signup);
                       },
                       child: const Text("Don't have an account? Signup"),
                     ),

@@ -1,8 +1,10 @@
+import 'package:chat_ui/routes/route_names.dart';
 import 'package:chat_ui/screen/login/cubit/signup_screen_cubit.dart';
 import 'package:chat_ui/screen/widget/common_button.dart';
 import 'package:chat_ui/screen/widget/common_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 class SignupScreen extends StatelessWidget {
   SignupScreen({super.key});
@@ -21,8 +23,11 @@ class SignupScreen extends StatelessWidget {
           if (state is SignupSuccess) {
             ScaffoldMessenger.of(
               context,
-            ).showSnackBar(const SnackBar(content: Text("Signup Successful ")));
-            Navigator.pop(context);
+            ).showSnackBar(const SnackBar(content: Text("Signup Successful")));
+
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              GoRouter.of(context).go(RouteNames.initialRoutes);
+            });
           }
 
           if (state is SignupError) {
