@@ -1,15 +1,27 @@
 # chat_ui
-A simplified Slack-like chat UI
 
-## Getting Started
+A simplified **Slack-like chat UI** built with **Flutter**.  
+Supports channels, direct messages, unread message badges, and message search.
 
-This project is a starting point for a Flutter application.
+## Flutter Version
 
-A few resources to get you started if this is your first Flutter project:
+1. Recommended Flutter version: 3.35.7
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+## State Management
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+1. Bloc with Cubit
+
+## Bonus features implemented
+
+1. Ability to search messages in a channel by keyword.
+2. Highlight matching results.
+3. Show number of unread messages per channel.
+4. Update in real-time when messages are read.
+
+## Project Setup Instructions
+
+1. **Clone the repository:**
+
+```bash
+git clone https://github.com/anshulgajapure98/chat_ui.git
+cd chat_ui

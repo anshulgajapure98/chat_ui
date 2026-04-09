@@ -10,7 +10,9 @@ class MessageCubit extends Cubit<MessageState> {
   }
 
   void loadMessages() {
-    emit(MessageLoaded(messages: {"1": [], "2": [], "3": []}));
+    emit(
+      MessageLoaded(messages: {"1": [], "2": [], "3": []}, searchResults: {}),
+    );
   }
 
   void sendMessage(String channelId, String sender, String text) {
@@ -20,13 +22,42 @@ class MessageCubit extends Cubit<MessageState> {
       final updatedMessages = Map<String, List<MessageModel>>.from(
         currentState.messages,
       );
-
       updatedMessages[channelId] = [
         ...updatedMessages[channelId]!,
         MessageModel(sender: sender, content: text, timestamp: DateTime.now()),
       ];
 
-      emit(MessageLoaded(messages: updatedMessages));
+      emit(
+        MessageLoaded(
+          messages: updatedMessages,
+          searchResults: currentState.searchResults,
+        ),
+      );
+    }
+  }
+
+  void searchMessages(String channelId, String keyword) {
+    if (state is MessageLoaded) {
+      final currentState = state as MessageLoaded;
+      final messages = currentState.messages[channelId] ?? [];
+
+      final filtered = messages
+          .where(
+            (msg) => msg.content.toLowerCase().contains(keyword.toLowerCase()),
+          )
+          .toList();
+
+      final updatedSearchResults = Map<String, List<MessageModel>>.from(
+        currentState.searchResults,
+      );
+      updatedSearchResults[channelId] = filtered;
+
+      emit(
+        MessageLoaded(
+          messages: currentState.messages,
+          searchResults: updatedSearchResults,
+        ),
+      );
     }
   }
 }

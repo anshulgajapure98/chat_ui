@@ -9,6 +9,7 @@ class MessagesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final TextEditingController controller = TextEditingController();
+    final TextEditingController searchController = TextEditingController();
 
     return BlocBuilder<ChannelCubit, ChannelState>(
       builder: (context, channelState) {
@@ -33,20 +34,51 @@ class MessagesScreen extends StatelessWidget {
 
             if (messageState is MessageLoaded) {
               final messages = messageState.messages[activeChannelId] ?? [];
-
+              final messagesToShow =
+                  messageState.searchResults[activeChannelId]?.isNotEmpty ==
+                      true
+                  ? messageState.searchResults[activeChannelId]!
+                  : messages;
               return Scaffold(
                 appBar: AppBar(title: Text("# ${activeChannel.name}")),
                 body: Column(
                   children: [
+                    TextField(
+                      controller: searchController,
+                      decoration: const InputDecoration(
+                        hintText: "Search messages...",
+                        border: OutlineInputBorder(),
+                      ),
+                      onChanged: (value) {
+                        context.read<MessageCubit>().searchMessages(
+                          activeChannelId,
+                          value,
+                        );
+                      },
+                    ),
                     Expanded(
                       child: ListView.builder(
-                        itemCount: messages.length,
+                        itemCount: messagesToShow.length,
                         itemBuilder: (context, index) {
-                          final msg = messages[index];
+                          final msg = messagesToShow[index];
+
+                          final text = msg.content;
+                          final keyword = searchController.text.trim();
 
                           return ListTile(
                             title: Text(msg.sender),
-                            subtitle: Text(msg.content),
+                            subtitle: keyword.isNotEmpty
+                                ? RichText(
+                                    text: TextSpan(
+                                      text: "",
+                                      style: DefaultTextStyle.of(context).style,
+                                      children: _highlightKeyword(
+                                        text,
+                                        keyword,
+                                      ),
+                                    ),
+                                  )
+                                : Text(msg.content),
                             trailing: Text(
                               "${msg.timestamp.hour}:${msg.timestamp.minute}",
                             ),
@@ -95,5 +127,33 @@ class MessagesScreen extends StatelessWidget {
         );
       },
     );
+  }
+
+  List<TextSpan> _highlightKeyword(String text, String keyword) {
+    final matches = RegExp(
+      RegExp.escape(keyword),
+      caseSensitive: false,
+    ).allMatches(text);
+    if (matches.isEmpty) return [TextSpan(text: text)];
+
+    List<TextSpan> spans = [];
+    int lastIndex = 0;
+
+    for (final m in matches) {
+      if (m.start > lastIndex)
+        spans.add(TextSpan(text: text.substring(lastIndex, m.start)));
+      spans.add(
+        TextSpan(
+          text: text.substring(m.start, m.end),
+          style: const TextStyle(backgroundColor: Colors.yellow),
+        ),
+      );
+      lastIndex = m.end;
+    }
+
+    if (lastIndex < text.length)
+      spans.add(TextSpan(text: text.substring(lastIndex)));
+
+    return spans;
   }
 }

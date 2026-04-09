@@ -27,13 +27,22 @@ class ChannelListScreen extends StatelessWidget {
                 return ListTile(
                   selected: state.activeChannelId == channel.id,
                   title: Text("# ${channel.name}"),
-                  trailing: CircleAvatar(
-                    radius: 12,
-                    child: Text(channel.unreadCount.toString()),
-                  ),
+                  trailing: channel.unreadCount > 0
+                      ? CircleAvatar(
+                          radius: 12,
+                          backgroundColor: Colors.red,
+                          child: Text(
+                            channel.unreadCount.toString(),
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 12,
+                            ),
+                          ),
+                        )
+                      : null,
                   onTap: () {
                     context.read<ChannelCubit>().selectChannel(channel.id);
-
+                    context.read<ChannelCubit>().markAsRead(channel.id);
                     Navigator.push(
                       context,
                       MaterialPageRoute(builder: (_) => const MessagesScreen()),

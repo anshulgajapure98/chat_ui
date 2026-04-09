@@ -5,8 +5,9 @@ sealed class MessageState {}
 
 final class MessageInitial extends MessageState {}
 
-final class MessageLoaded extends MessageState {
+class MessageLoaded extends MessageState {
   final Map<String, List<MessageModel>> messages;
+  final Map<String, List<MessageModel>> searchResults;
 
-  MessageLoaded({required this.messages});
+  MessageLoaded({required this.messages, this.searchResults = const {}});
 }
